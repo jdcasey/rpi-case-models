@@ -1,5 +1,6 @@
 include <indexes.scad>;
 include <defaults.scad>;
+include <common-case-pegs.scad>;
 use <fillets.scad>;
 
 // Taken from direct measurements
@@ -181,39 +182,5 @@ module imprint(){
     
     translate([11.5,-1,-0.001])
       cube([0.8,12,10.002]);
-  }
-}
-
-module upper_case_pegs(){
-  tols=tolerances();
-  fo=tols[FILLET_INNER]+wall;
-  wall_pad=tols[WALL_PAD];
-  
-  board=board();
-  board_w=board[W];
-  
-  lower_case_t=post_base_t+wall;
-  upper_case_t=max_lid_t()-board[T];
-
-  difference(){
-    translate([-wall,-wall,lower_case_t-5])
-      fillet_box([board_w+4*wall+2*wall_pad, 
-                  board_d+4*wall+2*wall_pad, 
-                  upper_case_t+5], fo+wall);
-
-    translate([0,0,-0.01])
-    fillet_box([board_w+2*wall+2*wall_pad, 
-                board_d+2*wall+2*wall_pad, 
-                200], fo);
-
-    for(y=[-wall-0.01, board_d+2*wall+2*wall_pad-0.01]){
-      translate([wall+wall_pad+5, y, -0.01])
-        cube([board_w-10, wall+0.02, 200]);
-    }
-
-    for(x=[-wall-0.01, board_w+2*wall+2*wall_pad-0.01]){
-      translate([x-wall/2, wall+wall_pad+1.5, -0.01])
-        cube([2*wall, board_d-3, 200]);
-    }
   }
 }

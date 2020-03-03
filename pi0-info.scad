@@ -1,10 +1,12 @@
 include <indexes.scad>;
 include <common-case-pegs.scad>;
+include <defaults.scad>;
+
+x_fudge = 4.5;
+y_fudge = 1.5;
+z_fudge = -0.8;
 
 // Taken from direct measurements
-wall=1.2;
-post_base_t=5.25+wall;
-
 wall_pad = 0.25;
 fi = 3+wall_pad; // inner fillet
 bolt_d=2.75;
@@ -28,22 +30,31 @@ sd_w=13;
 sd_d=14;
 sd_t=3.5;
 
-sd = [sd_w/2, sd_w, board_d/2, sd_d, -sd_t/2, sd_t+board_t];
+sd = [sd_w/2, sd_w, board_d/2, sd_d, -sd_t/4, sd_t+board_t];
 
 hdmi_d=10.5;
-hdmi_w=12.5;
+hdmi_w=13.5;
 hdmi_t=3.75;
 
-hdmi=[13.5-hdmi_w/2, hdmi_w, 
+hdmi=[x_fudge+14.5-hdmi_w/2, hdmi_w, 
       hdmi_d/2, hdmi_d, 
-      hdmi_t/2, hdmi_t]; // hdmi
+      hdmi_t/2+z_fudge, hdmi_t]; // hdmi
 
-usb_w=8;
+hdmi_ow=16.5;
+hdmi_ot=10;
+
+hdmi_open=[x_fudge+14.5-hdmi_w/2, hdmi_ow, 
+      -wall-wall_pad, wall+wall_pad, 
+      hdmi_ot/2+z_fudge, hdmi_ot]; // hdmi
+
+usb_w=9.5;
 usb_d=7.5;
 usb_t=3;
 
-power = [41.4-usb_w/2, usb_w, 29, usb_d, usb_t/2, usb_t];
-usb = [54-usb_w/2, usb_w, 47, usb_d, usb_t/2, usb_t];
+usb_z_fudge = 0.5;
+
+power = [x_fudge+41.4-usb_w/2, usb_w, usb_d/2, usb_d, usb_t/2+z_fudge-usb_z_fudge, usb_t+usb_z_fudge];
+usb = [x_fudge+54-usb_w/2, usb_w, usb_d/2, usb_d, usb_t/2+z_fudge-usb_z_fudge, usb_t+usb_z_fudge];
 
 header_w=53;
 header_d=6.5;
@@ -60,7 +71,7 @@ cam_t=1.25;
 
 cam=[board_w-cam_w/2, cam_w, 
      board_d/2, cam_d, 
-     cam_t/2, cam_t]; // camera
+     0, cam_t]; // camera
      
 //led_w=2.5;
 //led_d=7;
@@ -72,6 +83,7 @@ cam=[board_w-cam_w/2, cam_w,
 
 front_edge_wall=[
   hdmi,
+  hdmi_open,
   power,
   usb
 ];
@@ -101,18 +113,45 @@ function top()=top_wall;
 function bolts()=bolts;
 function max_comp_t()=hdmi[HEIGHT];
 function max_lid_t()=hdmi[HEIGHT]+2*wall;
-function wall()=wall;
-function post_base_t()=post_base_t;
 
+// You can select which imprint you want in the case here.
 module imprint(){
-  translate([35, 2, -2*wall-0.01])
+  // imprint_pi();
+  imprint_pihole();
+}
+
+module imprint_pihole(){
+  translate([30, 2, -wall-0.01])
+  scale([0.3,0.3,1])
+  rotate([0,0,90])
+  linear_extrude(height=10){
+    import("pihole.dxf");
+  }
+
+  translate([32, 8, -2*wall-0.01])
+  rotate([0,0,0])
+  difference(){
+    linear_extrude(height=10){
+      text("pi.hole", font="Liberation Sans:style=Italic", size=7.5);
+    }
+    
+    translate([27,-1,-0.001])
+      cube([0.8,10,10.002]);
+    
+    translate([19,-1,-0.001])
+      cube([0.8,10,10.002]);
+  }
+}
+
+module imprint_pi(){
+  translate([32, 2, -2*wall-0.01])
   scale([1,1,1])
   rotate([0,0,90])
   linear_extrude(height=10){
     import("raspberry.dxf");
   }
   
-  translate([38, 8, -2*wall-0.01])
+  translate([35, 8, -2*wall-0.01])
   rotate([0,0,0])
   difference(){
     linear_extrude(height=10){

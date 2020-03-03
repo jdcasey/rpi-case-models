@@ -4,8 +4,8 @@ use <fillets.scad>;
 // TODO: Select which board type. Each -info.scad contains
 // coordinates for each component to be cut out of the case.
 
-// use <pi0-info.scad>;
-use <pi1B-info.scad>;
+use <pi0-info.scad>;
+// use <pi1B-info.scad>;
 // use <pi3B+-info.scad>;
 // use <pi3A+-info.scad>;
 
@@ -30,7 +30,7 @@ fo=fi+wall;
 bolt_d=tolerances()[BOLT_D];
 bolt_pad_d=bolt_d*2;
 
-cut_projection=10;
+cut_projection=20;
 
 module board_blank_flex(h=total_case_t){
   union(){
@@ -75,7 +75,8 @@ module bolt_pads(h=wall){
         translate([xy[0], xy[1], 0])
         {
           cylinder(d=3*bolt_pad_d, h=wall, $fn=40);
-          cylinder(d=bolt_pad_d, h=h, $fn=40);
+
+            cylinder(d=bolt_pad_d, h=h, $fn=40);
         }
       }
 
@@ -94,7 +95,7 @@ module bolt_pads(h=wall){
 module front_edge_wall_cuts(){
   for(mod = front()){
     translate([mod[XOFF]-mod[WIDTH]/2, 
-               -wall-wall_pad-cut_projection-0.01, 
+               -wall-wall_pad-cut_projection+mod[YOFF]-0.01, 
                -board_t+mod[ZOFF]-mod[HEIGHT]/2])
       cube([mod[WIDTH], 
             mod[DEPTH]+cut_projection+0.02, 
@@ -216,10 +217,25 @@ module upper_case(){
     difference(){
       upper_case_pegs();
 
-      linear_extrude(height=total_case_t){
-        projection(cut=true)
-        translate([0,0,-total_case_t+0.1])
-          wall_cuts();
+      translate([0,0,-0.01])
+      union(){
+        linear_extrude(height=total_case_t+0.2){
+          projection(cut=true)
+          translate([0,0,-total_case_t+0.1])
+            wall_cuts();
+        }
+
+        linear_extrude(height=lower_case_t+board_t){
+          projection(cut=true)
+          translate([0,0,-upper_case_t+0.1])
+            wall_cuts();
+        }
+
+        linear_extrude(height=lower_case_t+2*board_t+0.1){
+          projection(cut=true)
+          translate([0,0,-upper_case_t-board_t-0.01])
+            wall_cuts();
+        }
       }
     }
   }

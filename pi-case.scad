@@ -29,6 +29,7 @@ fi=tolerances()[FILLET_INNER];
 fo=fi+wall;
 bolt_d=tolerances()[BOLT_D];
 bolt_pad_d=bolt_d*2;
+bolt_nut_d=bolt_d / 0.538; // seems like a consistent ratio of metric bolt : nut diameters.
 
 cut_projection=20;
 
@@ -67,28 +68,35 @@ module board_vent_grid(){
     }
 }
 
-module bolt_pads(h=wall){
+module for_bolts(){
+  translate([wall+wall_pad,wall+wall_pad,0])
+  for(xy=bolts()){
+    translate([xy[0], xy[1], 0])
+      children();
+  }
+}
+
+module bolt_pads(pad_h){
   intersection(){
     translate([wall+wall_pad,wall+wall_pad,0])
-    difference(){
-      for(xy=bolts()){
-        translate([xy[0], xy[1], 0])
+    for(xy=bolts()){
+      translate([xy[0], xy[1], 0])
+      {
+        cylinder(d=3*bolt_pad_d, h=wall, $fn=40);
+
+        translate([0,0,wall])
         {
-          cylinder(d=3*bolt_pad_d, h=wall, $fn=40);
+          cylinder(d1=bolt_pad_d*2, d2=bolt_pad_d, h=pad_h/3, $fn=40);
 
-            cylinder(d=bolt_pad_d, h=h, $fn=40);
+          translate([0,0,pad_h/3])
+            cylinder(d=bolt_pad_d, h=pad_h, $fn=40);
         }
-      }
-
-      for(xy=bolts()){
-        translate([xy[0], xy[1], wall])
-          cylinder(d=bolt_d, h=h+0.02, $fn=40);
       }
     }
     
     fillet_box([board_w+2*(wall+wall_pad),
                 board_d+2*(wall+wall_pad),
-                h], fo);
+                pad_h], fo);
   }
 }
 
@@ -165,6 +173,14 @@ module case_block(){
       }
       bolt_pads(post_t);
     }
+
+    for_bolts(){
+      translate([0,0,-0.01])
+      {
+        cylinder(d=bolt_d, h=total_case_t+0.02, $fn=40);
+        cylinder(d=bolt_nut_d, h=bolt_d, $fn=6);
+      }
+    }
     
     translate([wall+wall_pad, 
                wall+wall_pad, 
@@ -236,6 +252,15 @@ module upper_case(){
           translate([0,0,-upper_case_t-board_t-0.01])
             wall_cuts();
         }
+      }
+    }
+
+    for_bolts(){
+      translate([0,0,lower_case_t+0.8])
+      difference(){
+        cylinder(d=bolt_pad_d-0.8, h=upper_case_t-0.8, $fn=40);
+        translate([0,0,-0.01])
+          cylinder(d=bolt_d, h=upper_case_t, $fn=40);
       }
     }
   }

@@ -26,11 +26,11 @@ bolts = [
 // x-offset (midpoint), width, y-offset (midpoint), depth, z-offset (midpoint), height:
 
 // x-offset (midpoint), width, height:
-sd_w=13;
+sd_w=14;
 sd_d=14;
 sd_t=3.5;
 
-sd = [sd_w/2, sd_w, board_d/2, sd_d, -sd_t/4, sd_t+board_t];
+sd = [sd_w/2, sd_w, board_d-6.5-sd_d/2, sd_d, sd_t/4, sd_t];
 
 hdmi_d=10.5;
 hdmi_w=13.5;
@@ -116,53 +116,60 @@ function max_lid_t()=hdmi[HEIGHT]+2*wall;
 
 // You can select which imprint you want in the case here.
 module imprint(){
-  // imprint_pi();
-  imprint_pihole();
+  imprint_pi();
+  // imprint_pihole();
 }
 
 module imprint_pihole(){
-  translate([30, 2, -wall-0.01])
-  scale([0.3,0.3,1])
-  rotate([0,0,90])
-  linear_extrude(height=10){
-    import("pihole.dxf");
-  }
-
-  translate([32, 8, -2*wall-0.01])
-  rotate([0,0,0])
-  difference(){
+  translate([28, 5, -wall-0.01])
+  {
+    scale([1,1,1])
+    rotate([0,0,90])
     linear_extrude(height=10){
-      text("pi.hole", font="Liberation Sans:style=Italic", size=7.5);
+      import("pihole.dxf");
     }
-    
-    translate([27,-1,-0.001])
-      cube([0.8,10,10.002]);
-    
-    translate([19,-1,-0.001])
-      cube([0.8,10,10.002]);
+
+    translate([2, 3, -wall])
+    rotate([0,0,0])
+    difference(){
+      linear_extrude(height=10){
+        text("Pi-hole", font="Liberation Sans:style=Italic", size=7.5);
+      }
+      
+      translate([3,-1,-0.001])
+        cube([0.8,10,10.002]);
+      
+      translate([20.5,-1,-0.001])
+        cube([0.8,10,10.002]);
+
+      translate([28.5,-1,-0.001])
+        cube([0.8,10,10.002]);
+    }
   }
 }
 
 module imprint_pi(){
-  translate([32, 2, -2*wall-0.01])
-  scale([1,1,1])
-  rotate([0,0,90])
-  linear_extrude(height=10){
-    import("raspberry.dxf");
-  }
-  
-  translate([35, 8, -2*wall-0.01])
-  rotate([0,0,0])
-  difference(){
+  translate([35, 2, -2*wall-0.01])
+  {
+    scale([1,1,1])
+    rotate([0,0,90])
     linear_extrude(height=10){
-      text("zero", font="Liberation Sans:style=Italic");
+      import("raspberry.dxf");
     }
     
-    translate([22,-1,-0.001])
-      cube([0.8,10,10.002]);
-    
-    translate([10,-1,-0.001])
-      cube([0.8,10,10.002]);
+    translate([3, 6, 0])
+    rotate([0,0,0])
+    difference(){
+      linear_extrude(height=10){
+        text("zero", font="Liberation Sans:style=Italic");
+      }
+      
+      translate([22,-1,-0.001])
+        cube([0.8,10,10.002]);
+      
+      translate([10,-1,-0.001])
+        cube([0.8,10,10.002]);
+    }
   }
 }
 

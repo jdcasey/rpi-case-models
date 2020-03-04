@@ -130,23 +130,92 @@ function bolts()=bolts;
 function max_lid_t()=usb1[HEIGHT]-2*wall;
 
 module imprint(){
-    translate([40, 20, -2*wall-0.01])
+  // imprint_pi();
+  // imprint_pihole();
+  imprint_octo();
+}
+
+module imprint_pihole(){
+  translate([35, 12, -wall-0.01])
+  {
+    translate([5, -5, 0])
+    scale([1.75,1.75,1])
+    rotate([0,0,90])
+    linear_extrude(height=10){
+      import("pihole.dxf");
+    }
+
+    translate([-27, 20, -wall])
+    rotate([0,0,0])
+    difference(){
+      union(){
+        linear_extrude(height=10){
+          text("Pi-hole", font="Liberation Sans:style=Italic", size=10);
+        }
+        
+        translate([43,6,0])
+        linear_extrude(height=10){
+          text("3B+", font="Liberation Sans", size=6);
+        }
+      }
+      
+      translate([4.5,-1,-0.001])
+        cube([0.8,15,10.002]);
+      
+      translate([27.5,-1,-0.001])
+        cube([0.8,15,10.002]);
+
+      translate([38,-1,-0.001])
+        cube([0.8,15,10.002]);
+
+      translate([50,-1,-0.001])
+        cube([0.4,15,10.002]);
+    }
+  }
+}
+
+module imprint_pi(){
+  translate([38, 8, -2*wall-0.01])
+  {
     scale([1.2,1.2,1.2])
     rotate([0,0,90])
     linear_extrude(height=10){
       import("raspberry.dxf");
     }
     
-    translate([54, 25, -2*wall-0.01])
-    rotate([0,0,90])
+    translate([-33, 25, 0])
+    rotate([0,0,0])
     difference(){
       linear_extrude(height=10){
         text("3B+");
       }
       
-      translate([4.2,1,-0.001])
-      cube([0.8,10,10.002]);
+      translate([11.5,-1,-0.001])
+        cube([0.8,12,10.002]);
     }
+  }
+}
+
+module imprint_octo(){
+  translate([38, -1, -2*wall-0.01])
+  {
+    scale([0.1,0.1,1.2])
+    rotate([0,0,90])
+    linear_extrude(height=10){
+      import("octopus-pi.dxf");
+    }
+    
+    translate([-30, 38, 0])
+    rotate([0,0,0])
+    difference(){
+      linear_extrude(height=10){
+        text("3B+");
+      }
+      
+      translate([11.5,-1,-0.001])
+        cube([0.8,12,10.002]);
+    }
+  }
 }
 
 function max_comp_t()=header[HEIGHT];
@@ -165,22 +234,3 @@ function bolts()=bolts;
 function max_comp_t()=eth[HEIGHT];
 function max_lid_t()=usb1[HEIGHT]-3*wall;
 
-module imprint(){
-  translate([38, 2, -2*wall-0.01])
-  scale([1.2,1.2,1.2])
-  rotate([0,0,90])
-  linear_extrude(height=10){
-    import("raspberry.dxf");
-  }
-  
-  translate([5, 27, -2*wall-0.01])
-  rotate([0,0,0])
-  difference(){
-    linear_extrude(height=10){
-      text("3B+");
-    }
-    
-    translate([11.5,-1,-0.001])
-      cube([0.8,12,10.002]);
-  }
-}

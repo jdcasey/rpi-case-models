@@ -116,12 +116,13 @@ function max_lid_t()=hdmi[HEIGHT]+2*wall;
 
 // You can select which imprint you want in the case here.
 module imprint(){
-  imprint_pi();
+  // imprint_pi();
   // imprint_pihole();
+  imprint_octo();
 }
 
 module imprint_pihole(){
-  translate([28, 5, -wall-0.01])
+  translate([26, 5, -wall-0.01])
   {
     scale([1,1,1])
     rotate([0,0,90])
@@ -132,8 +133,15 @@ module imprint_pihole(){
     translate([2, 3, -wall])
     rotate([0,0,0])
     difference(){
-      linear_extrude(height=10){
-        text("Pi-hole", font="Liberation Sans:style=Italic", size=7.5);
+      union(){
+        linear_extrude(height=10){
+          text("Pi-hole", font="Liberation Sans:style=Italic", size=7.5);
+        }
+        
+        translate([32,5,0])
+        linear_extrude(height=10){
+          text("0", font="Liberation Sans", size=4.5);
+        }
       }
       
       translate([3,-1,-0.001])
@@ -144,6 +152,9 @@ module imprint_pihole(){
 
       translate([28.5,-1,-0.001])
         cube([0.8,10,10.002]);
+
+      translate([33.5,-1,-0.001])
+        cube([0.4,10,10.002]);
     }
   }
 }
@@ -155,6 +166,31 @@ module imprint_pi(){
     rotate([0,0,90])
     linear_extrude(height=10){
       import("raspberry.dxf");
+    }
+    
+    translate([3, 6, 0])
+    rotate([0,0,0])
+    difference(){
+      linear_extrude(height=10){
+        text("zero", font="Liberation Sans:style=Italic");
+      }
+      
+      translate([22,-1,-0.001])
+        cube([0.8,10,10.002]);
+      
+      translate([10,-1,-0.001])
+        cube([0.8,10,10.002]);
+    }
+  }
+}
+
+module imprint_octo(){
+  translate([28, 0, -2*wall-0.01])
+  {
+    scale([0.06,0.06,1.2])
+    rotate([0,0,90])
+    linear_extrude(height=10){
+      import("octopus-pi.dxf");
     }
     
     translate([3, 6, 0])

@@ -6,8 +6,8 @@ use <fillets.scad>;
 
 use <pi0-info.scad>;
 // use <pi1B-info.scad>;
-// use <pi3B+-info.scad>;
 // use <pi3A+-info.scad>;
+// use <pi3B+-info.scad>;
 
 // case sizes
 board_w=board()[W];

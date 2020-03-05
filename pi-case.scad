@@ -4,10 +4,10 @@ use <fillets.scad>;
 // TODO: Select which board type. Each -info.scad contains
 // coordinates for each component to be cut out of the case.
 
-use <pi0-info.scad>;
+// use <pi0-info.scad>;
 // use <pi1B-info.scad>;
 // use <pi3A+-info.scad>;
-// use <pi3B+-info.scad>;
+use <pi3B+-info.scad>;
 
 // case sizes
 board_w=board()[W];

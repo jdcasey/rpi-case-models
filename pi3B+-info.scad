@@ -130,9 +130,9 @@ function bolts()=bolts;
 function max_lid_t()=usb1[HEIGHT]-2*wall;
 
 module imprint(){
-  // imprint_pi();
+  imprint_pi();
   // imprint_pihole();
-  imprint_octo();
+  // imprint_octo();
 }
 
 module imprint_pihole(){

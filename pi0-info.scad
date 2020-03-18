@@ -116,9 +116,9 @@ function max_lid_t()=hdmi[HEIGHT]+2*wall;
 
 // You can select which imprint you want in the case here.
 module imprint(){
-  // imprint_pi();
+  imprint_pi();
   // imprint_pihole();
-  imprint_octo();
+  // imprint_octo();
 }
 
 module imprint_pihole(){
